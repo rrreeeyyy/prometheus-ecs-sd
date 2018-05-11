@@ -1,8 +1,10 @@
-package main
+package cmd
 
 import (
 	"flag"
 	"runtime"
+
+	"github.com/rrreeeyyy/prometheus-ecs-hako-sd/context"
 )
 
 var (
@@ -25,7 +27,7 @@ func (cmd *versionCommand) Register(fs *flag.FlagSet) {}
 
 type versionCommand struct{}
 
-func (cmd *versionCommand) Run(ctx *main.Ctx, args []string) error {
+func (cmd *versionCommand) Run(ctx *context.Ctx, args []string) error {
 	ctx.Out.Printf(`prometheus-ecs-hako-sd:
  version     : %s
  build date  : %s

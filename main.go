@@ -1,16 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"os"
+
+	"github.com/rrreeeyyy/prometheus-ecs-hako-sd/cmd"
 )
 
 func main() {
-	fmt.Println("vim-go")
-}
-
-func (c *Config) Run() int {
-	commands := [...]command{
-		&versionCommand(),
-	}
-	return 0
+	exit := cmd.main()
+	os.Exit(exit)
 }

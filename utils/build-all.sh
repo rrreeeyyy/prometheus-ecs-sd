@@ -29,7 +29,7 @@ mkdir -p "${PROJECT_ROOT}/release"
 
 for OS in ${BUILD_PLATFORMS[@]}; do
   for ARCH in ${BUILD_ARCHS[@]}; do
-    NAME="dep-${OS}-${ARCH}"
+    NAME="prometheus-ecs-hako-sd-${OS}-${ARCH}"
     if [[ "${OS}" == "windows" ]]; then
       NAME="${NAME}.exe"
     fi
@@ -42,7 +42,7 @@ for OS in ${BUILD_PLATFORMS[@]}; do
 
     echo "Building for ${OS}/${ARCH} with CGO_ENABLED=${CGO_ENABLED}"
     GOARCH=${ARCH} GOOS=${OS} CGO_ENABLED=${CGO_ENABLED} ${GO_BUILD_CMD} -ldflags "${GO_BUILD_LDFLAGS}"\
-     -o "${PROJECT_ROOT}/release/${NAME}" ./cmd/
-    shasum -a 256 "${PROJECT_ROOT}/release/${NAME}" > "${PROJECT_ROOT}/release/${NAME}".sha256
+     -o "${PROJECT_ROOT}/release/${NAME}"
+    shasum -a 256 "release/${NAME}" > "${PROJECT_ROOT}/release/${NAME}".sha256
   done
 done
