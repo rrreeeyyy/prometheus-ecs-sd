@@ -35,7 +35,7 @@ func Run(args []string) int {
 
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 	verbose := flags.Bool("v", false, "enable verbose logging")
-	version := flags.Bool("version", false, "Show the command version information")
+	version := flags.Bool("version", false, "show the command version information")
 
 	if err := flags.Parse(args[1:]); err != nil {
 		return errorExitCode
