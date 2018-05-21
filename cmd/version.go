@@ -1,10 +1,9 @@
 package cmd
 
 import (
-	"flag"
 	"runtime"
 
-	"github.com/rrreeeyyy/prometheus-ecs-hako-sd/context"
+	"github.com/rrreeeyyy/prometheus-ecs-sd/context"
 )
 
 var (
@@ -13,21 +12,7 @@ var (
 	commitHash string
 )
 
-const versionHelp = `Show the prometheus-ecs-hako-sd version information`
-
-func (cmd *versionCommand) Name() string { return "version" }
-func (cmd *versionCommand) Args() string {
-	return ""
-}
-func (cmd *versionCommand) ShortHelp() string { return versionHelp }
-func (cmd *versionCommand) LongHelp() string  { return versionHelp }
-func (cmd *versionCommand) Hidden() bool      { return false }
-
-func (cmd *versionCommand) Register(fs *flag.FlagSet) {}
-
-type versionCommand struct{}
-
-func (cmd *versionCommand) Run(ctx *context.Ctx, args []string) error {
+func ShowVersion(ctx *context.Ctx, args []string) error {
 	ctx.Out.Printf(`prometheus-ecs-hako-sd:
  version     : %s
  build date  : %s

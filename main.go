@@ -3,10 +3,10 @@ package main
 import (
 	"os"
 
-	"github.com/rrreeeyyy/prometheus-ecs-hako-sd/cmd"
+	"github.com/rrreeeyyy/prometheus-ecs-sd/cmd"
 )
 
 func main() {
-	exit := cmd.main()
+	exit := cmd.Run(os.Args)
 	os.Exit(exit)
 }
