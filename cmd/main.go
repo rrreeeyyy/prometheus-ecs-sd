@@ -1,15 +1,24 @@
 package cmd
 
 import (
+	"flag"
 	"fmt"
 	"io"
+	"log"
 	"os"
+
+	"github.com/rrreeeyyy/prometheus-ecs-sd/context"
 )
 
 var (
 	successExitCode = 0
 	errorExitCode   = 1
 )
+
+type Config struct {
+	Env            []string
+	Stdout, Stderr io.Writer
+}
 
 func Run(args []string) int {
 	_, err := os.Getwd()
@@ -18,12 +27,33 @@ func Run(args []string) int {
 		os.Exit(1)
 	}
 
-	return (0)
-}
+	c := &Config{
+		Stdout: os.Stdout,
+		Stderr: os.Stderr,
+		Env:    os.Environ(),
+	}
 
-type Config struct {
-	WorkingDir     string    // Where to execute
-	Args           []string  // Command-line arguments, starting with the program name.
-	Env            []string  // Environment variables
-	Stdout, Stderr io.Writer // Log output
+	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
+	verbose := flags.Bool("v", false, "enable verbose logging")
+	version := flags.Bool("version", false, "Show the command version information")
+
+	if err := flags.Parse(args[1:]); err != nil {
+		return errorExitCode
+	}
+
+	outLogger := log.New(c.Stdout, "", 0)
+	errLogger := log.New(c.Stderr, "", 0)
+
+	ctx := &context.Ctx{
+		Out:     outLogger,
+		Err:     errLogger,
+		Verbose: *verbose,
+	}
+
+	if *version {
+		ShowVersion(ctx, args)
+		return errorExitCode
+	}
+
+	return successExitCode
 }

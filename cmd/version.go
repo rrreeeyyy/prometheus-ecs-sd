@@ -13,13 +13,13 @@ var (
 )
 
 func ShowVersion(ctx *context.Ctx, args []string) error {
-	ctx.Out.Printf(`prometheus-ecs-hako-sd:
- version     : %s
- build date  : %s
- git hash    : %s
- go version  : %s
- go compiler : %s
- platform    : %s/%s
+	ctx.Out.Printf(`prometheus-ecs-sd:
+	version     : %s
+	build date  : %s
+	git hash    : %s
+	go version  : %s
+	go compiler : %s
+	platform    : %s/%s
 `, version, buildDate, commitHash,
 		runtime.Version(), runtime.Compiler, runtime.GOOS, runtime.GOARCH)
 	return nil
