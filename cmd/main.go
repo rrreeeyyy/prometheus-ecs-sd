@@ -36,6 +36,13 @@ func Run(args []string) int {
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 	verbose := flags.Bool("v", false, "enable verbose logging")
 	version := flags.Bool("version", false, "show the command version information")
+	path := flag.String("path", "", "path of file to write service discovery file")
+	discovery_container_port := flags.Int("discovery-container-port", 80, "container port number used for discovery")
+	only_ecs_sd_enable := flags.Bool("only-ecs-sd-enable", false, "discovery only if container has `ECS_SD_ENABLE=1` environment variable")
+
+	fmt.Printf("%s\n", *path)
+	fmt.Printf("%s\n", *discovery_container_port)
+	fmt.Printf("%s\n", *only_ecs_sd_enable)
 
 	if err := flags.Parse(args[1:]); err != nil {
 		return errorExitCode
