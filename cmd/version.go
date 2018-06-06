@@ -2,8 +2,6 @@ package cmd
 
 import (
 	"runtime"
-
-	"github.com/rrreeeyyy/prometheus-ecs-sd/context"
 )
 
 var (
@@ -12,7 +10,7 @@ var (
 	commitHash string
 )
 
-func ShowVersion(ctx *context.Ctx, args []string) error {
+func ShowVersion(ctx *Ctx, args []string) error {
 	ctx.Out.Printf(`prometheus-ecs-sd:
 	version     : %s
 	build date  : %s

@@ -5,11 +5,11 @@ import (
 )
 
 type CommandLineOptions struct {
-	Path                   string
-	Verbose                bool
-	ShowVersion            bool
-	DiscoveryContainerPort int
-	OnlyECSSDEnable        bool
+	Path            string
+	Verbose         bool
+	ShowVersion     bool
+	OnlyECSSDEnable bool
+	RefreshInterval int
 }
 
 func SetupFlagSet(name string, options *CommandLineOptions) *flag.FlagSet {
@@ -21,7 +21,7 @@ func SetupFlagSet(name string, options *CommandLineOptions) *flag.FlagSet {
 
 	flagSet.StringVar(&options.Path, "path", "", "path of file to write service discovery file")
 
-	flagSet.IntVar(&options.DiscoveryContainerPort, "discovery-container-port", 80, "container port number used for discovery")
+	flagSet.IntVar(&options.RefreshInterval, "refresh-interval", 60, "interval at which to scrape the AWS API for ECS service discovery")
 
 	return flagSet
 }

@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/rrreeeyyy/prometheus-ecs-sd/context"
+	"github.com/rrreeeyyy/prometheus-ecs-sd/sd"
 )
 
 var (
@@ -14,7 +14,7 @@ var (
 	errorExitCode   = 1
 )
 
-type Config struct {
+type RuntimeEnvironment struct {
 	Env            []string
 	Stdout, Stderr io.Writer
 }
@@ -26,7 +26,7 @@ func Run(args []string) int {
 		os.Exit(1)
 	}
 
-	c := &Config{
+	re := &RuntimeEnvironment{
 		Stdout: os.Stdout,
 		Stderr: os.Stderr,
 		Env:    os.Environ(),
@@ -39,10 +39,10 @@ func Run(args []string) int {
 		return errorExitCode
 	}
 
-	outLogger := log.New(c.Stdout, "", 0)
-	errLogger := log.New(c.Stderr, "", 0)
+	outLogger := log.New(re.Stdout, "", 0)
+	errLogger := log.New(re.Stderr, "", 0)
 
-	ctx := &context.Ctx{
+	ctx := &Ctx{
 		Out:     outLogger,
 		Err:     errLogger,
 		Verbose: options.Verbose,
@@ -51,6 +51,11 @@ func Run(args []string) int {
 	if options.ShowVersion {
 		ShowVersion(ctx, args)
 		return errorExitCode
+	}
+
+	cfg := sd.SDConfig{
+		RefreshInterval: options.RefreshInterval,
+		OnlyECSEnable:   options.OnlyECSSDEnable,
 	}
 
 	return successExitCode
