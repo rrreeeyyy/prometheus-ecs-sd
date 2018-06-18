@@ -24,6 +24,29 @@
 #   go-tests = true
 #   unused-packages = true
 
+[[override]]
+  revision = "bd73d950fa4440dae889bd9917bff7cef539f86e"
+  name = "github.com/Azure/azure-sdk-for-go"
+
+[[override]]
+  revision = "8a25372bbfec739b8719a9e3987400d15ef9e179"
+  name = "github.com/Azure/go-autorest"
+
+[[override]]
+  revision = "3627aeb7d4f6ade38f995d2c923e459146493c7e"
+  name = "k8s.io/client-go"
+
+[[override]]
+  revision = "75b8dd260ef0469d96d578705a87cffd0e09dab8"
+  name = "k8s.io/apimachinery"
+
+[[override]]
+  revision = "777bb3f19bcafe2575ffb2a3e46af92509ae9594"
+  name = "github.com/emicklei/go-restful"
+
+[[override]]
+  revision = "ded73eae5db7e7a0ef6f55aace87a2873c5d2b74"
+  name = "github.com/ugorji/go"
 
 [prune]
   go-tests = true

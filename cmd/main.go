@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/prometheus/prometheus/documentation/examples/custom-sd/adapter"
 	"github.com/rrreeeyyy/prometheus-ecs-sd/sd"
 )
 
@@ -53,10 +54,15 @@ func Run(args []string) int {
 		return errorExitCode
 	}
 
-	cfg := sd.SDConfig{
+	ctx := context.Background()
+
+	sdc := &SDConfig{
 		RefreshInterval: options.RefreshInterval,
 		OnlyECSEnable:   options.OnlyECSSDEnable,
 	}
+
+	sdAdapter := adapter.NewAdapter(ctx, *outputFile, "httpSD", disc, logger)
+	sdAdapter.Run()
 
 	return successExitCode
 }

@@ -1,9 +1,11 @@
-package sd
+package discovery
 
 import (
 	"context"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/aws/aws-sdk-go/service/ecs"
 	"github.com/prometheus/common/model"
@@ -19,22 +21,34 @@ const (
 )
 
 type SDConfig struct {
-	RefreshInterval int
+	region    string
+	AccessKey string
+	SecretKey string
+	RoleARN   string
+	Profile   string
+
+	RefreshInterval model.Duration
 	OnlyECSEnable   bool
 }
 
-type discovery struct {
-	ecs             *ecs.ECS
-	ec2             *ec2.EC2
-	refreshInterval int
+type Discovery struct {
+	aws      *aws.Config
+	interval time.Duration
+	profile  string
+	roleARN  string
+	logger   log.Logger
 }
 
-func newDiscovery(conf sdConfig) (*discovery, error) {
-	ecssd := &discovery{}
+func newDiscovery(conf SDConfig, logger log.Logger) (*Discovery, error) {
+	creds := credentials.NewStaticCredentials(conf.AccessKey, conf.SecretKey, "")
+
 }
 
 func (d *discovery) Run(ctx context.Context, ch chan<- []*targetgroup.Group) {
-	for c := time.Tick(time.Duration(d.refreshInterval) * time.Second); ; {
+	ticker := time.NewTicker(d.interval)
+	defer ticker.Stop()
+
+	for c := time.Tick(time.Duration(d.interval) * time.Second); ; {
 		select {
 		case <-c:
 			continue
