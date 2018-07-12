@@ -8,6 +8,9 @@ type CommandLineOptions struct {
 	Path            string
 	Verbose         bool
 	ShowVersion     bool
+	AccessKey       string
+	SecretKey       string
+	Profile         string
 	OnlyECSSDEnable bool
 	RefreshInterval int
 }
