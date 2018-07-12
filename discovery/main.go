@@ -21,7 +21,7 @@ const (
 )
 
 type SDConfig struct {
-	region    string
+	Region    string
 	AccessKey string
 	SecretKey string
 	RoleARN   string
