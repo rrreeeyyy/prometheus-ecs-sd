@@ -2,12 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"io"
-	"log"
 	"os"
 
-	"github.com/prometheus/prometheus/documentation/examples/custom-sd/adapter"
-	"github.com/rrreeeyyy/prometheus-ecs-sd/sd"
+	"github.com/rrreeeyyy/prometheus-ecs-sd/discovery"
+	"github.com/rrreeeyyy/prometheus-ecs-sd/log"
 )
 
 var (
@@ -15,22 +13,11 @@ var (
 	errorExitCode   = 1
 )
 
-type RuntimeEnvironment struct {
-	Env            []string
-	Stdout, Stderr io.Writer
-}
-
 func Run(args []string) int {
 	_, err := os.Getwd()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "failed to get working directory", err)
 		os.Exit(1)
-	}
-
-	re := &RuntimeEnvironment{
-		Stdout: os.Stdout,
-		Stderr: os.Stderr,
-		Env:    os.Environ(),
 	}
 
 	options := CommandLineOptions{}
@@ -40,28 +27,26 @@ func Run(args []string) int {
 		return errorExitCode
 	}
 
-	outLogger := log.New(re.Stdout, "", 0)
-	errLogger := log.New(re.Stderr, "", 0)
-
-	ctx := &Ctx{
-		Out:     outLogger,
-		Err:     errLogger,
-		Verbose: options.Verbose,
-	}
+	logger := logger.NewLogger(os.Stdout, os.Stderr)
 
 	if options.ShowVersion {
-		ShowVersion(ctx, args)
+		ShowVersion(args)
 		return errorExitCode
 	}
 
-	ctx := context.Background()
-
-	sdc := &SDConfig{
+	cfg := &SDConfig{
 		RefreshInterval: options.RefreshInterval,
 		OnlyECSEnable:   options.OnlyECSSDEnable,
+		Region:          options.Region,
+		AccessKey:       options.AccessKey,
+		SecretKey:       options.SecretKey,
+		Profile:         options.Profile,
+		RoleARN:         options.RoleARN,
 	}
 
-	sdAdapter := adapter.NewAdapter(ctx, *outputFile, "httpSD", disc, logger)
+	disc, err := NewDiscovery(cfg)
+
+	sdAdapter := adapter.NewAdapter(ctx, *outputFile, "ECSSD", disc, logger)
 	sdAdapter.Run()
 
 	return successExitCode

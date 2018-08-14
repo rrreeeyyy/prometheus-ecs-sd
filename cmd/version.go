@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"runtime"
 )
 
@@ -10,8 +11,8 @@ var (
 	commitHash string
 )
 
-func ShowVersion(ctx *Ctx, args []string) error {
-	ctx.Out.Printf(`prometheus-ecs-sd:
+func ShowVersion(args []string) error {
+	fmt.Printf(`prometheus-ecs-sd:
 	version     : %s
 	build date  : %s
 	git hash    : %s
