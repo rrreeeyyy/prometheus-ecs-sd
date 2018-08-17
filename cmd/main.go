@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
 
+	"github.com/prometheus/prometheus/documentation/examples/custom-sd/adapter"
 	"github.com/rrreeeyyy/prometheus-ecs-sd/discovery"
 	"github.com/rrreeeyyy/prometheus-ecs-sd/log"
 )
@@ -27,14 +29,14 @@ func Run(args []string) int {
 		return errorExitCode
 	}
 
-	logger := logger.NewLogger(os.Stdout, os.Stderr)
+	logger := log.NewLogger(os.Stdout, os.Stderr)
 
 	if options.ShowVersion {
 		ShowVersion(args)
 		return errorExitCode
 	}
 
-	cfg := &SDConfig{
+	cfg := discovery.SDConfig{
 		RefreshInterval: options.RefreshInterval,
 		OnlyECSEnable:   options.OnlyECSSDEnable,
 		Region:          options.Region,
@@ -44,9 +46,11 @@ func Run(args []string) int {
 		RoleARN:         options.RoleARN,
 	}
 
-	disc, err := NewDiscovery(cfg)
+	ctx := context.Background()
 
-	sdAdapter := adapter.NewAdapter(ctx, *outputFile, "ECSSD", disc, logger)
+	disc, err := discovery.NewDiscovery(cfg, logger)
+
+	sdAdapter := adapter.NewAdapter(ctx, options.Path, "ECSSD", disc, logger.Err)
 	sdAdapter.Run()
 
 	return successExitCode

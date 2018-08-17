@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/ecs"
 
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/prometheus/discovery/targetgroup"
@@ -32,7 +33,7 @@ type SDConfig struct {
 	RoleARN   string
 	Profile   string
 
-	RefreshInterval model.Duration
+	RefreshInterval int
 	OnlyECSEnable   bool
 }
 
@@ -43,7 +44,7 @@ type Discovery struct {
 	roleARN  string
 }
 
-func NewDiscovery(conf SDConfig, logger log.Logger) (*Discovery, error) {
+func NewDiscovery(conf SDConfig, logger log.Logger) (discovery *Discovery, err error) {
 	if conf.Region == "" {
 		sess, err := session.NewSession()
 		if err != nil {
@@ -62,7 +63,7 @@ func NewDiscovery(conf SDConfig, logger log.Logger) (*Discovery, error) {
 		creds = nil
 	}
 
-	return &Discovery{
+	discovery = &Discovery{
 		aws: &aws.Config{
 			Region:      &conf.Region,
 			Credentials: creds,
@@ -71,6 +72,8 @@ func NewDiscovery(conf SDConfig, logger log.Logger) (*Discovery, error) {
 		roleARN:  conf.RoleARN,
 		interval: time.Duration(conf.RefreshInterval),
 	}
+
+	return discovery, nil
 }
 
 func (d *Discovery) Run(ctx context.Context, ch chan<- []*targetgroup.Group) {
@@ -98,8 +101,11 @@ func (d *Discovery) refresh() (tg *targetgroup.Group, err error) {
 
 	if d.roleARN != "" {
 		creds := stscreds.NewCredentials(sess, d.roleARN)
+		ecs.New(sess, &aws.Config{Credentials: creds})
+	} else {
+		ecs.New(sess)
 	}
-	tg = &targetgroup.Group{}
 
+	tg = &targetgroup.Group{}
 	return tg, nil
 }

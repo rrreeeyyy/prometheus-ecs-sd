@@ -20,9 +20,9 @@ type CommandLineOptions struct {
 func SetupFlagSet(name string, options *CommandLineOptions) *flag.FlagSet {
 	flagSet := flag.NewFlagSet(name, flag.ContinueOnError)
 
-	flagSet.BoolVar(&options.Verbose, "v", false, "enable verbose logging")
+	flagSet.BoolVar(&options.Verbose, "verbose", false, "enable verbose logging")
 	flagSet.BoolVar(&options.ShowVersion, "version", false, "show the command version information")
-	flagSet.BoolVar(&options.OnlyECSSDEnable, "only-ecs-sd-enable", false, "discovery only if container has `ECS_SD_ENABLE=1` environment variable")
+	flagSet.BoolVar(&options.OnlyECSSDEnable, "only-ecs-sd-enable", false, "discovery only if container has ECS_SD_ENABLE=1 environment variable")
 
 	flagSet.StringVar(&options.Region, "region", "", "aws region")
 	flagSet.StringVar(&options.AccessKey, "access-key", "", "aws access key")
